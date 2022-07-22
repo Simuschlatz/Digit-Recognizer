@@ -1,7 +1,11 @@
-
 import pygame
 import numpy as np
-from digit_recognizer import *
+import os
+from CNN import *
+
+cwd = os.getcwd()
+files = os.listdir(cwd)
+print("Files in %r: %s" % (cwd, files))
 
 INP_DIM_X = 28
 INP_DIM_Y = 28
@@ -30,7 +34,7 @@ def modify_pixels(pixels, arr_width):
         d_row = abs(row - neigh_row)
         if d_col > 1 or d_row > 1:
             continue
-        pixels[idx + i] += .04
+        pixels[idx + i] += .03
         pixels[idx + i] = min(1, pixels[idx + i])
 
 def draw(pixels):

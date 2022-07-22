@@ -1,22 +1,16 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-import os
 
-# cwd = os.getcwd()  # Get the current working directory (cwd)
-# files = os.listdir(cwd)  # Get all the files in that directory
-# print("Files in %r: %s" % (cwd, files))
-
-data = pd.read_csv("train.csv")
+data = pd.read_csv("Data/training_data.csv")
 # m = height, n = width
 m, n = data.shape
 Data  = np.array(data)
 np.random.shuffle(Data)
 
-Data_train = data.T
-Y_train = Data_train[0]
-X_train = Data_train[1:n]
-X_train = X_train / 255.
+Data_train = Data.T
+Labels = Data_train[0]
+Inpt_layer = Data_train[1:n]
+Inpt_layer = Inpt_layer / 255.
 
 Iterations_training = 300
 
@@ -77,7 +71,6 @@ def get_predictions(A2):
     return np.argmax(A2, 0)
 
 def get_accuracy(predictions, Y):
-    print(predictions, Y)
     return np.sum(predictions == Y) / Y.size
 
 def gradient_descent(X, Y, alpha, iterations):
@@ -87,20 +80,12 @@ def gradient_descent(X, Y, alpha, iterations):
         dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
         W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
         if not i % 20:
-            print("Iteration: ", i)
+            print(f"Iteration: {i}")
             predictions = get_predictions(A2)
-            print(get_accuracy(predictions, Y))
+            print(f"ACCURACY: {get_accuracy(predictions, Y)}")
     return W1, b1, W2, b2
 
 def get_trained_weights():
-    W1t, b1t, W2t, b2t = gradient_descent(X_train, Y_train, 1, Iterations_training)
+    W1t, b1t, W2t, b2t = gradient_descent(Inpt_layer, Labels, 1, Iterations_training)
     return W1t, b1t, W2t, b2t
-
-def save_data(W1, b1, W2, b2):
-    with open("saved_data.txt", "w") as file:
-        file.write(f"{W1}\n")
-        file.write(f"{b1}\n")
-        file.write(f"{W2}\n")
-        file.write(f"{b2}\n")
-
 
