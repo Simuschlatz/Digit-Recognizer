@@ -12,9 +12,13 @@ INP_DIM_Y = 28
 
 W1, b1, W2, b2 = get_trained_weights()
 pixels = np.zeros((784, 1))
-
 UNIT = 20
-WIN = pygame.display.set_mode((INP_DIM_X * UNIT, INP_DIM_Y * UNIT))
+WIDTH, HEIGHT = INP_DIM_X * UNIT, INP_DIM_Y * UNIT
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
+FONT_SIZE = 30
+pygame.font.init()
+DISPLAY_FONT = pygame.font.Font("freesansbold.ttf", FONT_SIZE)
+
 
 def index_on_array(mouse_pos, arr_width):
     x, y = mouse_pos
@@ -37,7 +41,7 @@ def modify_pixels(pixels, arr_width):
         pixels[idx + i] += .03
         pixels[idx + i] = min(1, pixels[idx + i])
 
-def draw(pixels):
+def draw(pixels, prediction):
     WIN.fill((0,0,0))
     for i, pix in enumerate(pixels):
         if not pix:
@@ -48,11 +52,14 @@ def draw(pixels):
         x = col * UNIT
         y = row * UNIT
         pygame.draw.rect(WIN, (intensity, intensity, intensity), (x, y, UNIT, UNIT))
+    prediction_surface = DISPLAY_FONT.render(f"My prediction is: {prediction}", False, (130, 130, 130))
+    WIN.blit(prediction_surface, (10, 10))
     pygame.display.update()
 
 
 def main():
     global pixels
+    prediction = None
     run = True
     dragging = False
     while run:
@@ -62,16 +69,18 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     prediction = make_prediction(W1, b1, W2, b2, pixels)
+                    prediction = int(prediction)
                     print("PREDICTION: ", prediction)
                 if event.key == pygame.K_c:
                     pixels = np.zeros((784, 1))
+                    prediction = None
             if event.type == pygame.MOUSEBUTTONDOWN:
                 dragging = True
             if event.type == pygame.MOUSEBUTTONUP:
                 dragging = False
         if dragging:        
             modify_pixels(pixels, INP_DIM_X)
-        draw(pixels)
+        draw(pixels, prediction)
 
 main()
 
