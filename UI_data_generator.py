@@ -38,7 +38,7 @@ def modify_pixels(pixels, arr_width):
         d_row = abs(row - neigh_row)
         if d_col > 1 or d_row > 1:
             continue
-        pixels[idx + i] += .03
+        pixels[idx + i] += .1
         pixels[idx + i] = min(1, pixels[idx + i])
 
 def draw(pixels, prediction):
@@ -62,6 +62,7 @@ def main():
     prediction = None
     run = True
     dragging = False
+    clock = pygame.time.Clock()
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -81,6 +82,7 @@ def main():
         if dragging:        
             modify_pixels(pixels, INP_DIM_X)
         draw(pixels, prediction)
+        clock.tick(60)
 
 main()
 

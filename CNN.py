@@ -12,7 +12,7 @@ Labels = Data_train[0]
 Inpt_layer = Data_train[1:n]
 Inpt_layer = Inpt_layer / 255.
 
-Iterations_training = 300
+Iterations_training = 200
 
 def init_params():
     W1 = np.random.rand(80, 784) - 0.5
